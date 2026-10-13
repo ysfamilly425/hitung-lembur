@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Hitung Lembur Karyawan (PP 35/2021)</title>
+
+  <!-- ========================================================================= -->
+  <!-- [TEMPAT KODE MONETAG HEAD / IN-PAGE PUSH / INTERSTITIAL SCRIPT]           -->
+  <!-- Tempelkan script Monetag (jika ada script header global) di bawah ini:    -->
+  <!-- ========================================================================= -->
+  <!-- <script src="https://alwingulla.com/88/tag.min.js" data-zone="123456" async data-cfasync="false"></script> -->
+
+  <style>
+    /* -------------------------------------------------------------
+       RESET & BASIC STYLING
+    ------------------------------------------------------------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* -------------------------------------------------------------
+       HEADER
+    ------------------------------------------------------------- */
+    .app-header {
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      color: #ffffff;
+      padding: 24px 20px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3);
+      margin-bottom: 20px;
+    }
+
+    .app-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .app-header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* -------------------------------------------------------------
+       SLOT IKLAN MONETAG STYLING
+    ------------------------------------------------------------- */
+    .ad-container {
+      width: 100%;
+      margin: 16px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px dashed #cbd5e1;
+      padding: 8px;
+      min-height: 90px;
+    }
+
+    .ad-placeholder-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    /* -------------------------------------------------------------
+       CARD FORM
+    ------------------------------------------------------------- */
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .form-group .sub-label {
+      font-size: 0.775rem;
+      font-weight: normal;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-prefix {
+      position: absolute;
+      left: 14px;
+      font-weight: 600;
+      color: #64748b;
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    .input-control {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 1rem;
+      color: #0f172a;
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+
+    .input-control:focus {
+      background: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .input-with-prefix {
+      padding-left: 44px;
+    }
+
+    select.input-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 16px;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+
+    /* -------------------------------------------------------------
+       BUTTONS
+    ------------------------------------------------------------- */
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      flex: 0 0 auto;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    /* -------------------------------------------------------------
+       HASIL PERHITUNGAN
+    ------------------------------------------------------------- */
+    #result-section {
+      display: none;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-header {
+      border-bottom: 2px dashed #e2e8f0;
+      padding-bottom: 16px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .result-total-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .result-total-value {
+      font-size: 1.875rem;
+      font-weight: 800;
+      color: #16a34a;
+      margin-top: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background-color: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .detail-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 0.9rem;
+    }
+
+    .detail-table th, .detail-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .detail-table th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: #475569;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .detail-table td.amount {
+      text-align: right;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .formula-note {
+      background-color: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 0.825rem;
+      color: #1e40af;
+      margin-top: 18px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      margin-top: 16px;
+      width: 100%;
+      padding: 10px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      color: #334155;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    /* -------------------------------------------------------------
+       FOOTER
+    ------------------------------------------------------------- */
+    .app-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 24px;
+      padding-bottom: 24px;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 18px;
+      }
+      .result-total-value {
+        font-size: 1.5rem;
+      }
+      .btn {
+        padding: 12px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header class="app-header">
+      <h1>Kalkulator Hitung Lembur</h1>
+      <p>Perhitungan Resmi Sesuai PP No. 35 Tahun 2021 (1/173 Upah Sebulan)</p>
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- [POSISI IKLAN 1: BANNER ATAS MONETAG]                                     -->
+    <!-- Tempelkan script Banner Monetag Anda di dalam div berikut:                -->
+    <!-- ========================================================================= -->
+    <div id="monetag-banner-top" class="ad-container">
+      <div style="width: 100%;">
+        <div class="ad-placeholder-label">Slot Iklan Monetag (Banner Atas)</div>
+        
+        <!-- MULAI KODE IKLAN MONETAG BANNER ATAS -->
+        <!-- Contoh penempatan script banner Monetag:
+             <script type="text/javascript">
+               atOptions = {
+                 'key' : 'KODE_IKLAN_MONETAG_ANDA',
+                 'format' : 'iframe',
+                 'height' : 90,
+                 'width' : 728,
+                 'params' : {}
+               };
+             </script>
+             <script type="text/javascript" src="//www.topcreativeformat.com/KODE_IKLAN/invoke.js"></script>
+        -->
+        <div style="font-size: 0.85rem; color: #64748b; padding: 12px 0;">
+          [Tempel Kode Script Iklan Banner Monetag di Sini]
+        </div>
+        <!-- SELESAI KODE IKLAN MONETAG BANNER ATAS -->
+
+      </div>
+    </div>
+    <!-- AKHIR POSISI IKLAN 1 -->
+
+    <!-- FORM HITUNG LEMBUR -->
+    <main class="card">
+      <form id="overtimeForm" onsubmit="event.preventDefault(); handleCalculate();">
+        
+        <!-- Input Gaji Pokok -->
+        <div class="form-group">
+          <label for="monthlySalary">Upah Sebulan (Gaji Pokok + Tunjangan Tetap)</label>
+          <div class="input-wrapper">
+            <span class="input-prefix">Rp</span>
+            <input 
+              type="text" 
+              id="monthlySalary" 
+              class="input-control input-with-prefix" 
+              placeholder="Contoh: 5.000.000" 
+              required
+              autocomplete="off"
+            >
+          </div>
+          <div class="sub-label">Sesuai aturan, upah 1 jam lembur = 1/173 × Upah Sebulan.</div>
+        </div>
+
+        <!-- Pilihan Jenis Hari -->
+        <div class="form-group">
+          <label for="dayType">Jenis Hari Lembur</label>
+          <select id="dayType" class="input-control" onchange="updateHourHelperText()">
+            <option value="weekday">Hari Kerja Biasa (Jam ke-1: 1.5x, Jam berikutnya: 2x)</option>
+            <option value="holiday_6day">Hari Libur Resmi / Istirahat Mingguan (6 Hari Kerja)</option>
+            <option value="holiday_5day">Hari Libur Resmi / Istirahat Mingguan (5 Hari Kerja)</option>
+          </select>
+          <div class="sub-label" id="dayTypeHelper">Tarif: Jam ke-1 dikalikan 1.5x upah per jam, jam ke-2 dst dikalikan 2.0x.</div>
+        </div>
+
+        <!-- Input Jumlah Jam Lembur -->
+        <div class="form-group">
+          <label for="overtimeHours">Jumlah Jam Lembur</label>
+          <input 
+            type="number" 
+            id="overtimeHours" 
+            class="input-control" 
+            placeholder="Contoh: 3 atau 3.5" 
+            step="0.5" 
+            min="0.5" 
+            max="24" 
+            required
+          >
+          <div class="sub-label">Dapat diisi desimal, contoh 1.5 jam atau 4 jam.</div>
+        </div>
+
+        <!-- TOMBOL AKSI -->
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary" onclick="handleReset()">
+            Reset
+          </button>
+          <button type="submit" id="btnCalculate" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+              <line x1="8" y1="6" x2="16" y2="6"></line>
+              <line x1="16" y1="14" x2="16" y2="18"></line>
+              <path d="M16 10h.01"></path>
+              <path d="M12 10h.01"></path>
+              <path d="M8 10h.01"></path>
+              <path d="M12 14h.01"></path>
+              <path d="M8 14h.01"></path>
+              <path d="M12 18h.01"></path>
+              <path d="M8 18h.01"></path>
+            </svg>
+            Hitung Uang Lembur
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <!-- HASIL KALKULASI -->
+    <section id="result-section" class="card">
+      <div class="result-header">
+        <div>
+          <div class="result-total-label">Total Uang Lembur Diterima</div>
+          <div id="totalOvertimePay" class="result-total-value">Rp 0</div>
+        </div>
+        <span id="resultBadge" class="badge">Hari Kerja</span>
+      </div>
+
+      <div>
+        <table class="detail-table">
+          <thead>
+            <tr>
+              <th>Rincian Komponen</th>
+              <th style="text-align: right;">Nilai</th>
+            </tr>
+          </thead>
+          <tbody id="detailTableBody">
+            <!-- Diisi secara dinamis oleh JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="formula-note">
+        <strong>Ketentuan Hukum:</strong> Berdasarkan Kepmenakertrans No. KEP.102/MEN/VI/2004 &amp; PP No. 35 Tahun 2021 Pasal 31–32, upah satu jam lembur dihitung <strong>1/173 × Upah Sebulan</strong>.
+      </div>
+
+      <button type="button" class="copy-btn" onclick="copyResultSummary()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        Salin Rincian Perhitungan
+      </button>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- [POSISI IKLAN 2: BANNER BAWAH MONETAG]                                    -->
+    <!-- Elemen div khusus di bawah form untuk menempelkan Banner Monetag:         -->
+    <!-- ========================================================================= -->
+    <div id="monetag-banner-bottom" class="ad-container">
+      <div style="width: 100%;">
+        <div class="ad-placeholder-label">Slot Iklan Monetag (Banner Bawah)</div>
+        
+        <!-- MULAI KODE IKLAN MONETAG BANNER BAWAH -->
+        <!-- Contoh penempatan script banner Monetag:
+             <script type="text/javascript">
+               atOptions = {
+                 'key' : 'KODE_IKLAN_MONETAG_BAWAH',
+                 'format' : 'iframe',
+                 'height' : 90,
+                 'width' : 728,
+                 'params' : {}
+               };
+             </script>
+             <script type="text/javascript" src="//www.topcreativeformat.com/KODE_IKLAN/invoke.js"></script>
+        -->
+        <div style="font-size: 0.85rem; color: #64748b; padding: 12px 0;">
+          [Tempel Kode Script Iklan Banner Monetag di Sini]
+        </div>
+        <!-- SELESAI KODE IKLAN MONETAG BANNER BAWAH -->
+
+      </div>
+    </div>
+    <!-- AKHIR POSISI IKLAN 2 -->
+
+    <footer class="app-footer">
+      &copy; 2026 Aplikasi Hitung Lembur Karyawan &bull; Perhitungan Transparan &amp; Akurat
+    </footer>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT INLINE                                                         -->
+  <!-- ========================================================================= -->
+  <script>
+    // =========================================================================
+    // 1. KONFIGURASI IKLAN MONETAG (SMARTLINK & INTERSTITIAL)
+    // =========================================================================
+    
+    // >>> GANTI URL DI BAWAH DENGAN URL SMARTLINK MONETAG ANDA <<<
+    const MONETAG_SMARTLINK_URL = "https://uplcm.com/4/12021701";
+
+    // Opsi: Apakah membuka Smartlink Monetag setiap kali tombol 'Hitung Lembur' ditekan?
+    // true  = Ya, buka Smartlink di tab baru saat klik hitung
+    // false = Tidak, hanya hitung tanpa membuka smartlink
+    const ENABLE_MONETAG_SMARTLINK_ON_CLICK = true;
+
+    // Frekuensi buka iklan (1 = setiap klik, 2 = setiap 2 kali klik, dst.)
+    const SMARTLINK_FREQUENCY = 1;
+    let calculateClickCounter = 0;
+
+    /**
+     * Fungsi pemicu iklan Monetag Smartlink / Intent Iklan saat tombol diklik.
+     * Dilengkapi penanganan error (try - catch) lengkap agar kalkulasi tidak pernah terhenti
+     * meskipun browser memblokir popup atau intent iklan gagal dibuka.
+     */
+    function triggerMonetagAd() {
+      if (!ENABLE_MONETAG_SMARTLINK_ON_CLICK) return;
+      
+      calculateClickCounter++;
+      
+      // Periksa apakah frekuensi klik memenuhi syarat
+      if (calculateClickCounter % SMARTLINK_FREQUENCY !== 0) return;
+
+      if (!MONETAG_SMARTLINK_URL || MONETAG_SMARTLINK_URL === "https://uplcm.com/4/12021701") {
+        console.log("[Monetag Info] URL Smartlink belum diganti pada variabel MONETAG_SMARTLINK_URL.");
+        return;
+      }
+
+      // =========================================================================
+      // BLOK PENANGANAN ERROR (TRY - CATCH) SAAT MEMANGGIL INTENT / IKLAN
+      // =========================================================================
+      try {
+        console.log("[Monetag] Mencoba memanggil intent iklan / Smartlink...");
+
+        // Coba buka menggunakan window.open
+        const adWindow = window.open(MONETAG_SMARTLINK_URL, '_blank', 'noopener,noreferrer');
+
+        // Deteksi jika browser/popup blocker memblokir window.open
+        if (!adWindow || adWindow.closed || typeof adWindow.closed === 'undefined') {
+          console.warn("[Monetag Warning] Popup diblokir oleh browser. Mencoba fallback intent elemen anchor...");
+          
+          // Fallback: Simulasi klik link tersembunyi
+          try {
+            const tempLink = document.createElement('a');
+            tempLink.href = MONETAG_SMARTLINK_URL;
+            tempLink.target = '_blank';
+            tempLink.rel = 'noopener noreferrer';
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+            console.log("[Monetag] Fallback anchor intent berhasil dieksekusi.");
+          } catch (fallbackError) {
+            console.error("[Monetag Error] Fallback intent iklan juga gagal:", fallbackError.message || fallbackError);
+          }
+        } else {
+          console.log("[Monetag] Intent iklan berhasil dipanggil di tab/jendela baru.");
+        }
+      } catch (error) {
+        // Menangkap segala kemungkinan error (SecurityError, DOMException, Cross-Origin, dll.)
+        console.error("[Monetag Error] Terjadi kesalahan saat memanggil intent iklan:", {
+          name: error.name || "UnknownError",
+          message: error.message || error,
+          stack: error.stack || "No stack trace"
+        });
+      }
+    }
+
+    // =========================================================================
+    // 2. HELPER FORMATTING RUPIAH & INPUT MASK
+    // =========================================================================
+    const salaryInput = document.getElementById("monthlySalary");
+
+    function formatNumberToRupiah(number) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(Math.round(number));
+    }
+
+    function parseRupiahInput(value) {
+      if (!value) return 0;
+      const cleanString = value.replace(/[^0-9]/g, "");
+      return parseFloat(cleanString) || 0;
+    }
+
+    // Auto format ribuan saat mengetik gaji pokok
+    salaryInput.addEventListener("input", function(e) {
+      const cursorPosition = this.selectionStart;
+      const rawValue = this.value.replace(/[^0-9]/g, "");
+      
+      if (rawValue) {
+        this.value = new Intl.NumberFormat("id-ID").format(rawValue);
+      } else {
+        this.value = "";
+      }
+    });
+
+    function updateHourHelperText() {
+      const type = document.getElementById("dayType").value;
+      const helper = document.getElementById("dayTypeHelper");
+      if (type === "weekday") {
+        helper.innerText = "Tarif: Jam ke-1 dikalikan 1.5x upah per jam, jam ke-2 dan seterusnya dikalikan 2.0x.";
+      } else if (type === "holiday_6day") {
+        helper.innerText = "Tarif: Jam ke-1 s/d jam ke-7 (2.0x), jam ke-8 (3.0x), jam ke-9 & ke-10 (4.0x).";
+      } else {
+        helper.innerText = "Tarif: Jam ke-1 s/d jam ke-8 (2.0x), jam ke-9 (3.0x), jam ke-10 s/d ke-12 (4.0x).";
+      }
+    }
+
+    // =========================================================================
+    // 3. LOGIKA KALKULASI UANG LEMBUR (PP 35 TAHUN 2021)
+    // =========================================================================
+    let currentCalculationData = null;
+
+    function handleCalculate() {
+      const rawSalary = parseRupiahInput(salaryInput.value);
+      const hours = parseFloat(document.getElementById("overtimeHours").value);
+      const dayType = document.getElementById("dayType").value;
+
+      if (!rawSalary || rawSalary <= 0) {
+        alert("Silakan masukkan upah sebulan yang valid.");
+        salaryInput.focus();
+        return;
+      }
+
+      if (isNaN(hours) || hours <= 0) {
+        alert("Silakan masukkan jumlah jam lembur minimal 0.5 jam.");
+        document.getElementById("overtimeHours").focus();
+        return;
+      }
+
+      // =======================================================================
+      // TRIGGER IKLAN SAAT KLIK TOMBOL HITUNG
+      // =======================================================================
+      triggerMonetagAd();
+
+      // Perhitungan tarif per jam (1 / 173 upah sebulan)
+      const hourlyRate = rawSalary / 173;
+      let totalPay = 0;
+      let breakdownRows = [];
+      let badgeLabel = "";
+
+      if (dayType === "weekday") {
+        badgeLabel = "Hari Kerja Biasa";
+        if (hours <= 1) {
+          const pay1 = hours * 1.5 * hourlyRate;
+          totalPay += pay1;
+          breakdownRows.push({
+            desc: `Jam ke-1 (${hours} jam × 1.5 × Upah/Jam)`,
+            amount: pay1
+          });
+        } else {
+          const pay1 = 1 * 1.5 * hourlyRate;
+          const restHours = hours - 1;
+          const payRest = restHours * 2.0 * hourlyRate;
+          totalPay = pay1 + payRest;
+
+          breakdownRows.push({
+            desc: `Jam ke-1 (1 jam × 1.5 × Upah/Jam)`,
+            amount: pay1
+          });
+          breakdownRows.push({
+            desc: `Jam ke-2 s/d ${hours} (${restHours} jam × 2.0 × Upah/Jam)`,
+            amount: payRest
+          });
+        }
+      } else if (dayType === "holiday_6day") {
+        badgeLabel = "Hari Libur (6 Hari Kerja)";
+        let remaining = hours;
+
+        // Jam 1 s.d. 7 (2x)
+        const tier1 = Math.min(remaining, 7);
+        if (tier1 > 0) {
+          const pay = tier1 * 2.0 * hourlyRate;
+          totalPay += pay;
+          breakdownRows.push({ desc: `Jam ke-1 s/d ${tier1} (${tier1} jam × 2.0)`, amount: pay });
+          remaining -= tier1;
+        }
+
+        // Jam ke-8 (3x)
+        if (remaining > 0) {
+          const tier2 = Math.min(remaining, 1);
+          const pay = tier2 * 3.0 * hourlyRate;
+          totalPay += pay;
+          breakdownRows.push({ desc: `Jam ke-8 (${tier2} jam × 3.0)`, amount: pay });
+          remaining -= tier2;
+        }
+
+        // Jam ke-9 dan ke-10 (4x)
+        if (remaining > 0) {
+          const tier3 = remaining;
+          const pay = tier3 * 4.0 * hourlyRate;
+          totalPay += pay;
+          breakdownRows.push({ desc: `Jam ke-9 s/d ${hours} (${tier3} jam × 4.0)`, amount: pay });
+        }
+      } else {
+        // holiday_5day
+        badgeLabel = "Hari Libur (5 Hari Kerja)";
+        let remaining = hours;
+
+        // Jam 1 s.d. 8 (2x)
+        const tier1 = Math.min(remaining, 8);
+        if (tier1 > 0) {
+          const pay = tier1 * 2.0 * hourlyRate;
+          totalPay += pay;
+          breakdownRows.push({ desc: `Jam ke-1 s/d ${tier1} (${tier1} jam × 2.0)`, amount: pay });
+          remaining -= tier1;
+        }
+
+        // Jam ke-9 (3x)
+        if (remaining > 0) {
+          const tier2 = Math.min(remaining, 1);
+          const pay = tier2 * 3.0 * hourlyRate;
+          totalPay += pay;
+          breakdownRows.push({ desc: `Jam ke-9 (${tier2} jam × 3.0)`, amount: pay });
+          remaining -= tier2;
+        }
+
+        // Jam ke-10 s.d. 12 (4x)
+        if (remaining > 0) {
+          const tier3 = remaining;
+          const pay = tier3 * 4.0 * hourlyRate;
+          totalPay += pay;
+          breakdownRows.push({ desc: `Jam ke-10 s/d ${hours} (${tier3} jam × 4.0)`, amount: pay });
+        }
+      }
+
+      // Tampilkan Hasil
+      document.getElementById("totalOvertimePay").innerText = formatNumberToRupiah(totalPay);
+      document.getElementById("resultBadge").innerText = badgeLabel;
+
+      const tbody = document.getElementById("detailTableBody");
+      tbody.innerHTML = "";
+
+      // Baris Gaji & Tarif Dasar
+      const baseRow = document.createElement("tr");
+      baseRow.innerHTML = `
+        <td>Upah Lembur per Jam (1/173 × Upah)</td>
+        <td class="amount">${formatNumberToRupiah(hourlyRate)}/jam</td>
+      `;
+      tbody.appendChild(baseRow);
+
+      const hoursRow = document.createElement("tr");
+      hoursRow.innerHTML = `
+        <td>Total Durasi Lembur</td>
+        <td class="amount">${hours} Jam</td>
+      `;
+      tbody.appendChild(hoursRow);
+
+      // Breakdown baris
+      breakdownRows.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.desc}</td>
+          <td class="amount">${formatNumberToRupiah(row.amount)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Simpan data kalkulasi aktif untuk fitur salin
+      currentCalculationData = {
+        salary: rawSalary,
+        hourlyRate: hourlyRate,
+        hours: hours,
+        dayType: badgeLabel,
+        breakdownRows: breakdownRows,
+        totalPay: totalPay
+      };
+
+      const resultSection = document.getElementById("result-section");
+      resultSection.style.display = "block";
+      resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function handleReset() {
+      document.getElementById("overtimeForm").reset();
+      salaryInput.value = "";
+      document.getElementById("result-section").style.display = "none";
+      updateHourHelperText();
+      currentCalculationData = null;
+    }
+
+    function copyResultSummary() {
+      if (!currentCalculationData) return;
+      const data = currentCalculationData;
+      let text = `--- RINCIAN HITUNG LEMBUR ---\n`;
+      text += `Upah Sebulan: ${formatNumberToRupiah(data.salary)}\n`;
+      text += `Upah Lembur / Jam (1/173): ${formatNumberToRupiah(data.hourlyRate)}\n`;
+      text += `Kategori: ${data.dayType}\n`;
+      text += `Durasi: ${data.hours} Jam\n`;
+      text += `-----------------------------\n`;
+      data.breakdownRows.forEach(r => {
+        text += `${r.desc} = ${formatNumberToRupiah(r.amount)}\n`;
+      });
+      text += `-----------------------------\n`;
+      text += `TOTAL UANG LEMBUR: ${formatNumberToRupiah(data.totalPay)}\n`;
+      text += `(Sesuai PP No. 35 Tahun 2021)`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Rincian perhitungan lembur berhasil disalin ke clipboard!");
+      }).catch(() => {
+        alert("Gagal menyalin otomatis, silakan salin manual teks hasil.");
+      });
+    }
+
+    // Inisialisasi tampilan awal
+    updateHourHelperText();
+  </script>
+</body>
+</html>
